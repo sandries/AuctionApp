@@ -13,3 +13,6 @@ build/
 *.psess
 *.vsp
 *.vspx
+
+*.nupkg
+**/packages/*
