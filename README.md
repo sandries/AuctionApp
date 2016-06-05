@@ -10,3 +10,5 @@ Technology Stack:
 
 
 ### Overview
+
+Auctionata.Mvc it's the web client that allows us to view the auction rooms and items and to register for an auction.
