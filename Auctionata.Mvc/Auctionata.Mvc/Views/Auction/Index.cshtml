@@ -1,0 +1,124 @@
+﻿@using System.Globalization
+@model Auctionata.Mvc.Models.AuctionDetailViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .center {
+        margin: auto;
+        width: 60%;
+        padding: 10px;
+    }
+</style>
+
+
+<div class="row" style="margin: 10px;">
+    <div class="col-sm-6 col-md-6" style="background: transparent">
+        <div class="center">
+            <img src="@Model.Auction.Picture" style="" class="img-responsive" alt="Responsive image">
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-6" style="background: transparent">
+        <h1>
+            @Model.Auction.Name
+        </h1>
+        <h3>
+            @Convert.ToDateTime(Model.Auction.StartingDate, CultureInfo.InvariantCulture).ToString("dddd, MMM dd, yyyy, hh tt")
+        </h3>
+        <p>
+            Interested in this auction? Register to participate.
+        </p>
+        @if (Model.Registred)
+        {
+            <p>You are registered for this auction</p>
+        }
+        else
+        {
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                Register now
+            </button>
+        }
+    </div>
+</div>
+
+@if (Model.Registred && Model.ActiveItem != null)
+{
+    <hr/>
+    <h3>Currenly receiving bids for the fallowing item:</h3>
+    <div class="row" style="margin: 10px;">
+        <div class="col-sm-4 col-md-6">
+            <div class="thumbnail">
+                <img src="@Url.Content(Model.ActiveItem.Image)" class="img-responsive" />
+            </div>
+            <div class="caption">
+                @Model.ActiveItem.Id | @Model.ActiveItem.Name<br />
+            </div>
+        </div>
+        <div class="col-sm-4 col-md-6">
+            <p>Asking price: @Model.ActiveItem.AskingPrice.ToString("€ 0.##")</p>
+            <p>Highest bid: @Model.ActiveItem.HighestBid.ToString("€ 0.##")</p>
+            <p>User: @Model.ActiveItem.User</p>
+
+            <form id='your-form-name' action='@Url.Action("Bid", "Auction")' method='POST'>
+                @Html.HiddenFor(model => model.Auction.Code)
+                @Html.HiddenFor(model => model.ActiveItem.Id)
+                @Html.HiddenFor(model => model.ActiveItem.AskingPrice)
+                <button type="submit" class="btn btn-primary">Make bid for € @Model.ActiveItem.AskingPrice.ToString("#.##")</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        @Model.ActiveItem.Description
+    </div>
+}
+
+<hr />
+<h3>All objects</h3>
+@{
+    int index = 0;
+    for (int i = 0; i <= Model.Items.Count / 3; i++)
+    {
+        <div class="row" style="margin: 10px;">
+            @for (int j = 0; j < 3; j++)
+            {
+                if (index < Model.Items.Count)
+                {
+                    var item = Model.Items[index];
+                    <div class="col-sm-4 col-md-4">
+                        <div class="thumbnail">
+                            <img src="@Url.Content(item.Image)" class="img-responsive" />
+                        </div>
+                        <div class="caption">
+                            <p>@item.Id | @item.Name</p>
+                            <p>Starting price € @item.StartingPrice.ToString("#.##")</p>
+                        </div>
+                    </div>index += 1;
+                }
+            }
+        </div>
+    }
+}
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <form id='your-form-name' action='@Url.Action("Register", "Auction")' method='POST'>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Please enter your email:</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.HiddenFor(model => model.Auction.Code)
+                    <input type="email" class="form-control" id="email" placeholder="Email" name="email">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
