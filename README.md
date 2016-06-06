@@ -72,15 +72,21 @@ Example of json:
 
 ### Database Schema
 
-DynamoDB database
+##### DynamoDB database
 
-Users 
+![DynamoDB database](/img/DynamoDB.JPG)
 
-Auctions
+##### Users 
+![Users](/img/Users.JPG)
 
-Items
+##### Auctions
+![Auctions](/img/Auctions.JPG)
 
-### Bid Queue
+##### Items
+![Items](/img/Items.JPG)
+
+##### Bid Queue
+![SQS QUEUE](/img/SQSQueue.JPG)
 
 -----
 
@@ -96,9 +102,18 @@ To start the auctioning on one room, we must start the queue processing. Start t
 
 Now you are able to bid on the items from that auction room, if you are registered in the auction.
 
+You can see below a screenshot for an auction room, before the user registered.
+
+![Auction Room](/img/mvc_auction_unregistred.JPG)
+
+Below you can see a screenshot for an auction room that's currently active and for which the user is registered to.
+
+![Auction Room](/img/mvc_started_auction.JPG)
+
+
+
 
 #### Reset auctions
-
 
 To be able to restart testing, run `ResetAuctionConsole`, that will reset the status for each auction room.
 
