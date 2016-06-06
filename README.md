@@ -11,8 +11,9 @@ Technology Stack:
 
 ### Overview
 
-**Auction Rooms** - the user is able to see the details regarding the auction rooms and the related items. The user is able to bid on the current auctioned item if he is registered to the auction.
-Once the auction room gets active( one contained at a time is active for auctioning) the user is able to bid and to see the details regarding the last bid value and the user that submitted it. 
+**Auction Rooms** - there can be one or more auction rooms in the auction house. An auction room contains a set of auction items that the user can bid on. 
+Once an auction room gets active, the contained auction items are available for auctioning, one at a time. 
+
 
 **Auction items** - an auction room contains one or more items. These items are available for bidding one at a time( after the auction is finished for the current item, auctioning will start on next item **ready** for auction).
 
@@ -22,12 +23,18 @@ An item can be in one of the following states:
  * active
  * finished
 
-**Active item** - the item that's currently being auctioned.
- An auction room can contain only one item with state=active at a time.
+**Active item** - after the auction has started, the auction room will contain one and only one auction item with `state=active`. Users can place a bid on the item that's currently active.
 
-**Bidding** - the user can bid on the current **active item**. The bids are incremented starting from the **starting price**. When bidding, the request for the current bid value is sent on the bid queue. The request that gets first in the queue will be considered winner for the current value of the bid.
+**Bidding** - the user can bid on the current **active item**. 
+The auction starts from the **starting_price** associated to the the auction item. 
+The bids are incremented starting from the current offered price for the item.
+When the user submits a bid, the request is posted on the bid queue. The requests are read from the queue, processed and the current status of the auctioned item is updated in the database.
 
-**Winning an auctioned item** - a timespan is configured as a wait time from the time the last bid was submitted. If this timespan has elapsed from the last bid and no other request to bid with an incremented value was submitted, the user that made the last bid wins the auction for the current active item. 
+**Winning an auctioned item** - after the auction is finished on the current active item, the user that placed the highest bid wins the auctioned item.
+
+A timespan is configured as a wait time interval from the time the last bid was submitted. If this timespan has elapsed from the last bid, the user that made the last bid wins the auction for the current active item. 
+
+### Data Persistence
 
 The data regarding the auction rooms and items, the user and the results of the auction are persisted in the DynamoDB database.
 
